@@ -1,5 +1,3 @@
-https://github.com/MeiKakuTenShi/csudh-spring2020
-
 # Real-Valued Predictions Using Real-Valued Attributes: 
 ## Calculate How your Wine Tastes
 ### Problem Description:
