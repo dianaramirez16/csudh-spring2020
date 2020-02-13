@@ -1,4 +1,4 @@
-# csudh-spring2020
+# CSUDH - Spring 2020
 Graduate projects and coursework for Spring 2020 semester at CSU Dominguez Hills.
 
 ## Courses
