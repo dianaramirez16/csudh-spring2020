@@ -15,3 +15,6 @@ concurrency, and functional, logic, and objected-oriented programming.
   4. Understand design/implementation issues involved with variable allocation and binding, control flow, types, subroutines, parameter passing
   
   5. Develop an understanding of the compilation process
+
+## Textbook
+Programming Language Pragmatics, fourth edition, by Michael L. Scott, Morgan Kaufmann Publishers.
