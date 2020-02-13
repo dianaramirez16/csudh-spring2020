@@ -12,6 +12,7 @@ info_file = 'data_description.txt'
 box_plots_file = 'box_plots.pdf'
 score_hist_file = 'score_hist.pdf'
 heatmap_file = 'heatmap_plot.pdf'
+scatter_plot_file = 'scatter_plot.pdf'
 par_coord_file = 'parallel_coordinates_plots.pdf'
 
 # extract values and put into list[('label', [val0, val1, val2, ... ])] format
@@ -169,7 +170,7 @@ with PdfPages(output_dir + par_coord_file) as pdf:
             pcolor = 'green'
 
         row_data = row[:len(row) - 1]
-        row_data.plot(color=pcolor, alpha=0.35)
+        row_data.plot(color=pcolor, alpha=0.2)
 
     plt.title('Parallel Coordinate Plot (Raw Data)')
     plt.xlabel('Attribute Index')
@@ -207,7 +208,7 @@ with PdfPages(output_dir + par_coord_file) as pdf:
             pcolor = 'green'
         
         row_data = normed_data.iloc[index]
-        row_data.plot(color=pcolor, alpha=0.35)
+        row_data.plot(color=pcolor, alpha=0.2)
 
     plt.title('Parallel Coordinate Plot (Normalized Data)')
     plt.xlabel('Attribute Index')
@@ -237,3 +238,4 @@ with PdfPages(output_dir + heatmap_file) as pdf:
 
     fig.subplots_adjust(bottom=0.35, left=0.25)
     pdf.savefig()
+    plt.close()
