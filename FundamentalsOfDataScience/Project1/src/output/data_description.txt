@@ -1,0 +1,163 @@
+***** ABOUT THE DATA SET *****
+
+Attribute Count (Columns): 12
+# of Samples (rows):1599
+	#1
+	label: fixed acidity
+	type: Number
+	range: 4.6 - 15.9
+	sample count: 1599
+
+	#2
+	label: volatile acidity
+	type: Number
+	range: 0.12 - 1.58
+	sample count: 1599
+
+	#3
+	label: citric acid
+	type: Number
+	range: 0 - 1
+	sample count: 1599
+
+	#4
+	label: residual sugar
+	type: Number
+	range: 0.9 - 15.5
+	sample count: 1599
+
+	#5
+	label: chlorides
+	type: Number
+	range: 0.012 - 0.611
+	sample count: 1599
+
+	#6
+	label: free sulfur dioxide
+	type: Number
+	range: 1 - 72
+	sample count: 1599
+
+	#7
+	label: total sulfur dioxide
+	type: Number
+	range: 6 - 289
+	sample count: 1599
+
+	#8
+	label: density
+	type: Number
+	range: 0.99007 - 1.00369
+	sample count: 1599
+
+	#9
+	label: pH
+	type: Number
+	range: 2.74 - 4.01
+	sample count: 1599
+
+	#10
+	label: sulphates
+	type: Number
+	range: 0.33 - 2
+	sample count: 1599
+
+	#11
+	label: alcohol
+	type: Number
+	range: 8.4 - 14.9
+	sample count: 1599
+
+	#12
+	label: quality
+	type: Number
+	range: 3 - 8
+	sample count: 1599
+
+
+
+
+***** DATA SUMMARY STATS *****
+
+	label: fixed acidity
+	mean: 8.319637
+	standard deviation: 1.740552                
+	quartile boundaries: [4.6, 7.1, 7.9, 9.2, 15.9]
+	decile boundaries: [4.6, 6.5, 7.0, 7.2, 7.6, 7.9, 8.3, 8.9, 9.7, 10.7, 15.9]
+
+	label: volatile acidity
+	mean: 0.527821
+	standard deviation: 0.179004                
+	quartile boundaries: [0.12, 0.39, 0.52, 0.64, 1.58]
+	decile boundaries: [0.12, 0.31, 0.37, 0.415, 0.47, 0.52, 0.57, 0.61, 0.66, 0.745, 1.58]
+
+	label: citric acid
+	mean: 0.270976
+	standard deviation: 0.194740                
+	quartile boundaries: [0.0, 0.09, 0.26, 0.42, 1.0]
+	decile boundaries: [0.0, 0.01, 0.07, 0.124, 0.21, 0.26, 0.32, 0.39, 0.46, 0.522, 1.0]
+
+	label: residual sugar
+	mean: 2.538806
+	standard deviation: 1.409487                
+	quartile boundaries: [0.9, 1.9, 2.2, 2.6, 15.5]
+	decile boundaries: [0.9, 1.7, 1.8, 2.0, 2.1, 2.2, 2.3, 2.5, 2.7, 3.6, 15.5]
+
+	label: chlorides
+	mean: 0.087467
+	standard deviation: 0.047051                
+	quartile boundaries: [0.012, 0.07, 0.079, 0.09, 0.611]
+	decile boundaries: [0.012, 0.06, 0.067, 0.072, 0.076, 0.079, 0.082, 0.087, 0.094, 0.109, 0.611]
+
+	label: free sulfur dioxide
+	mean: 15.874922
+	standard deviation: 10.456886                
+	quartile boundaries: [1.0, 7.0, 14.0, 21.0, 72.0]
+	decile boundaries: [1.0, 5.0, 6.0, 9.0, 11.0, 14.0, 16.0, 19.0, 24.0, 31.0, 72.0]
+
+	label: total sulfur dioxide
+	mean: 46.467792
+	standard deviation: 32.885037                
+	quartile boundaries: [6.0, 22.0, 38.0, 62.0, 289.0]
+	decile boundaries: [6.0, 14.0, 19.0, 24.0, 30.0, 38.0, 45.8, 55.0, 69.0, 93.2, 289.0]
+
+	label: density
+	mean: 0.996747
+	standard deviation: 0.001887                
+	quartile boundaries: [0.99007, 0.9956, 0.99675, 0.997835, 1.00369]
+	decile boundaries: [0.99007, 0.994556, 0.99534, 0.99586, 0.9963, 0.99675, 0.997156, 0.9976, 0.998174, 0.99914, 1.00369]
+
+	label: pH
+	mean: 3.311113
+	standard deviation: 0.154338                
+	quartile boundaries: [2.74, 3.21, 3.31, 3.4, 4.01]
+	decile boundaries: [2.74, 3.12, 3.18, 3.23, 3.28, 3.31, 3.35, 3.38, 3.424, 3.51, 4.01]
+
+	label: sulphates
+	mean: 0.658149
+	standard deviation: 0.169454                
+	quartile boundaries: [0.33, 0.55, 0.62, 0.73, 2.0]
+	decile boundaries: [0.33, 0.5, 0.54, 0.564, 0.59, 0.62, 0.65, 0.7, 0.76, 0.85, 2.0]
+
+	label: alcohol
+	mean: 10.422983
+	standard deviation: 1.065334                
+	quartile boundaries: [8.4, 9.5, 10.2, 11.1, 14.9]
+	decile boundaries: [8.4, 9.3, 9.5, 9.6, 9.9, 10.2, 10.5, 10.9, 11.3, 12.0, 14.9]
+
+	label: quality
+	mean: 5.636023
+	standard deviation: 0.807317                
+	quartile boundaries: [3.0, 5.0, 6.0, 6.0, 8.0]
+	decile boundaries: [3.0, 5.0, 5.0, 5.0, 5.0, 6.0, 6.0, 6.0, 6.0, 7.0, 8.0]
+
+
+	*** Unique Quality scores ***
+	[5.0, 6.0, 7.0, 4.0, 8.0, 3.0]
+	*score counts*
+	value: 5, count: 681
+	value: 6, count: 638
+	value: 7, count: 199
+	value: 4, count: 53
+	value: 8, count: 18
+	value: 3, count: 10
