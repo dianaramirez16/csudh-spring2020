@@ -8,8 +8,8 @@
 ## Two kinds of implementation of LL top-down parsing
     1. Recursive Descent Parser
         - constructs a parse tree from the root down
-        - predicting at each step which production will be used to expand the current node
-            - based on the next available token of input
+        - predicting at each step which production will be used to expand the current node based on the next
+          available token of input
         - reports any syntactical errors if any
         - each subroutine corresponds, one to one, to a nonterminal of the grammar that defines the language
         
@@ -32,6 +32,6 @@
     
 ## Extra Credit
     1. Currently, the parser only prints out a universal error message “syntax error” without referring to a 
-    specific line of the program. Augment parser.c such that more detailed and informative error messages are 
-    printed out.
+       specific line of the program. Augment parser.c such that more detailed and informative error messages are 
+       printed out.
     2. Come up with a few programs with lexical errors (beyond comments) with corresponding error message printed.
