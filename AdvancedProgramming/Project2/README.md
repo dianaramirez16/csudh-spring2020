@@ -16,21 +16,22 @@
     2. Table Driven Parser
         - requires a stack and parse table
         - The parser operates in a loop which pops the top symbol off the stack and performs the following actions
-            -- If the popped symbol is a terminal
-                --> the parser attempts to match it against an incoming token from the scanner
-                    -- If the match fails
-                        --> the parser announces a syntax error
-            -- If the popped symbol is a nonterminal
-                --> the parser uses it together with the next available input token to index into the two-dimensional
-                    table that tells it which production to predict (or whether to announce a syntax error).
+            If the popped symbol is a terminal
+            --> the parser attempts to match it against an incoming token from the scanner
+                If the match fails
+                --> the parser announces a syntax error
+            If the popped symbol is a nonterminal
+            --> the parser uses it together with the next available input token to index into the two-dimensional
+                table that tells it which production to predict (or whether to announce a syntax error).
                    
 ## Tasks
-    1. Check if comments have correct forms (either /*…*/ or //). Second, the parser.c does not take a file name as user input.
-       Fix the programs so that it can take a calculator language program (with comments) and find if it has lexical error 
-       and syntax error or not.
+    1. Check if comments have correct forms (either /*…*/ or //). Second, the parser.c does not take a file 
+       name as user input. Fix the programs so that it can take a calculator language program (with comments)
+       and find if it has lexical error and syntax error or not.
     2. Implement scanner and parser using table-driven parsing (C programming language).
     
 ## Extra Credit
-    1. Currently, the parser only prints out a universal error message “syntax error” without referring to a specific line 
-    of the program. Augment parser.c such that more detailed and informative error messages are printed out.
+    1. Currently, the parser only prints out a universal error message “syntax error” without referring to a 
+    specific line of the program. Augment parser.c such that more detailed and informative error messages are 
+    printed out.
     2. Come up with a few programs with lexical errors (beyond comments) with corresponding error message printed.
