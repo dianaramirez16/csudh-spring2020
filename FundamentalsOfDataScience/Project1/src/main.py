@@ -132,9 +132,9 @@ for x, y in score_count.items():
 with PdfPages(output_dir + score_hist_file) as pdf:
     plt.figure()
     histogram = sorted(score_count.items())
-
-    plt.bar(x, y in zip(*histogram))
-    plt.axis([-1, 12, 0, 800]) # x-axis from 0 to 10,  y-axis from 0 to 800
+    x, y = zip(*histogram)
+    plt.bar(x, y)
+    plt.axis([0, 10, 0, 750]) # x-axis from 0 to 10,  y-axis from 0 to 750
    
     plt.xlabel("Quality Score")
     plt.ylabel("# of red wines")
