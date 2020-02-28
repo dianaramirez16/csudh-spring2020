@@ -1,10 +1,5 @@
 # Top-Down LL(1) Parser for the Calculator Language with Comments
 
-## /given
-  Source code provided as part of the assignment.
-## /programs
-  Simple examples of "calculator" language
-
 ## Simple “calculator” language
   The calculator allows values to be read into (numeric) variables, which may then be used in
   expressions. The values of the expressions in turn can be written to the output. It is a simple language
@@ -40,3 +35,8 @@
        specific line of the program. Augment parser.c such that more detailed and informative error messages are 
        printed out.
     2. Come up with a few programs with lexical errors (beyond comments) with corresponding error message printed.
+    
+## /given
+  Source code provided as part of the assignment.
+## /programs
+  Simple examples of "calculator" language
