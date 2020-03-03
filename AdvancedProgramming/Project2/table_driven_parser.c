@@ -39,21 +39,21 @@ symbol nonterminals[] = {program, stmt_list, stmt,
 struct table_item
 {
     int action;
-    symbol production[3][3];
+    symbol production[4];
 };
-// complete hard-coded parse table
+// complete hard-coded parse table -- based on figure 2.20
 struct table_item parseTable[sizeof(nonterminals)/sizeof(*nonterminals)][sizeof(names)/sizeof(*names)] = {
-    {{0,{{}, {}, {}}}, {1,}, {0,}, {0,}, {1,}, {1,}, {1,}, {1,}, {1,}, {1,}, {1,}, {0,}},   // program
-    {{0,}, {1,}, {0,}, {0,}, {1,}, {1,}, {1,}, {1,}, {1,}, {1,}, {1,}, {0,}},   // stmt_list
-    {{0,}, {1,}, {0,}, {0,}, {1,}, {1,}, {1,}, {1,}, {1,}, {1,}, {1,}, {1,}},   // stmt
-    {{0,}, {0,}, {1,}, {1,}, {1,}, {0,}, {1,}, {1,}, {1,}, {1,}, {1,}, {1,}},   // expr
-    {{0,}, {1,}, {0,}, {0,}, {1,}, {1,}, {0,}, {0,}, {0,}, {1,}, {1,}, {0,}},   // term_tail
-    {{0,}, {0,}, {1,}, {1,}, {1,}, {0,}, {1,}, {1,}, {1,}, {1,}, {1,}, {1,}},   // term
-    {{0,}, {1,}, {0,}, {0,}, {1,}, {1,}, {0,}, {0,}, {0,}, {0,}, {0,}, {0,}},   // factor_tail
-    {{0,}, {0,}, {1,}, {1,}, {1,}, {0,}, {1,}, {1,}, {1,}, {1,}, {1,}, {1,}},   // factor
-    {{1,}, {1,}, {1,}, {1,}, {1,}, {1,}, {1,}, {0,}, {0,}, {1,}, {1,}, {1,}},   // add_op
-    {{1,}, {1,}, {1,}, {1,}, {1,}, {1,}, {1,}, {1,}, {1,}, {0,}, {0,}, {1,}},   // mult_op
-};// id, number, read, write, :=,   (,     ),    +,    -,    *,   /,    $$
+    {{0, {stmt_list, $$}},          {1, {}},                        {0, {stmt_list, $$}},   {0, {stmt_list, $$}},       {1, {}}, {1, {}},                       {1, {}},    {1, {}},                            {1, {}},                            {1, {}},                                {1, {}},                                {0, {stmt_list, $$}}},  // program
+    {{0, {stmt, stmt_list}},        {1, {}},                        {0, {stmt, stmt_list}}, {0, {stmt, stmt_list}},     {1, {}}, {1, {}},                       {1, {}},    {1, {}},                            {1, {}},                            {1, {}},                                {1, {}},                                {0, {eps}}},            // stmt_list
+    {{0, {id, becomes, expr}},      {1, {}},                        {0, {read, id}},        {0, {write, expr}},         {1, {}}, {1, {}},                       {1, {}},    {1, {}},                            {1, {}},                            {1, {}},                                {1, {}},                                {1, {}}},               // stmt
+    {{0, {term, term_tail}},        {0, {term, term_tail}},         {1, {}},                {1, {}},                    {1, {}}, {0, {term, term_tail}},        {1, {}},    {1, {}},                            {1, {}},                            {1, {}},                                {1, {}},                                {1, {}}},               // expr
+    {{0, {eps}},                    {1, {}},                        {0, {eps}},             {0, {eps}},                 {1, {}}, {1, {}},                       {0, {eps}}, {0, {add_op, term, term_tail}},     {0, {add_op, term, term_tail}},     {1, {}},                                {1, {}},                                {0, {eps}}},            // term_tail
+    {{0, {factor, factor_tail}},    {0, {factor, factor_tail}},     {1, {}},                {1,},                       {1, {}}, {0, {factor, factor_tail}},    {1, {}},    {1, {}},                            {1, {}},                            {1, {}},                                {1, {}},                                {1, {}}},               // term
+    {{0, {eps}},                    {1, {}},                        {0, {eps}},             {0, {eps}},                 {1, {}}, {1,},                          {0, {eps}}, {0, {eps}},                         {0, {eps}},                         {0, {mult_op, factor, factor_tail}},    {0, {mult_op, factor, factor_tail}},    {0, {eps}}},            // factor_tail
+    {{0, {id}},                     {0, {number}},                  {1, {}},                {1, {}},                    {1, {}}, {0, {lpar, expr, rpar}},       {1, {}},    {1, {}},                            {1, {}},                            {1, {}},                                {1, {}},                                {1, {}}},               // factor
+    {{1, {}},                       {1, {}},                        {1, {}},                {1, {}},                    {1, {}}, {1, {}},                       {1, {}},    {0, {plus}},                        {0, {minus}},                       {1, {}},                                {1, {}},                                {1, {}}},               // add_op
+    {{1, {}},                       {1, {}},                        {1, {}},                {1, {}},                    {1, {}}, {1, {}},                       {1, {}},    {1, {}},                            {1, {}},                            {0, {star}},                            {0, {slash}},                           {1, {}}},               // mult_op
+};//    id,                         number,                         read,                   write,                        :=,       (,                             ),          +,                                  -,                                  *,                                       /,                                      $$
 
 // get row index into parse table
 int nonTermInd(symbol s)
