@@ -1,5 +1,5 @@
 /* Complete recursive descent parser for the calculator language.
-    Builds on figure 2.17. 
+    Builds on figure 2.17.
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,7 +18,7 @@ static token input_token;
 FILE *src;
 
 void error() {
-    printf("syntax error\n");
+    printf("syntax error \n");
     exit(1);
 }
 

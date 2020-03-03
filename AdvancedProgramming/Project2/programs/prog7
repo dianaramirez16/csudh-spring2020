@@ -1,7 +1,7 @@
-// prog5
+// prog7
 read a
 read b
-area := a * b
+area : a * b
 perimeter := 2 * (a + b
 write area
 write perimeter
