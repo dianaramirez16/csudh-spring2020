@@ -15,6 +15,7 @@ char *names[] = {"read", "write", "id", "literal", "becomes",
 
 static token input_token;
 
+FILE *src;
 
 
 /****************************************************************************
@@ -24,8 +25,13 @@ static token input_token;
 // all symbols in language
 typedef enum {program, stmt_list, stmt, expr, term_tail, term,
                 factor, factor_tail, mult_op, add_op,
-                $$, eps, id, becomes, read, write, plus, 
+                $$, eps, /*id, becomes, read, write,*/ plus,
                 minus, star, slash, lpar, rpar, number} symbol;
+char *sym_names[] = { "program", "stmt_list", "stmt", "expr",
+                      "term_tail", "term", "factor", "factor_tail",
+                      "mult_op", "add_op", "$$", "epsilon", "id",
+                      ":=", "read", "write", "+", "-", "*", "/",
+                      "(", ")", "number"};
 // symbols that are terminals
 symbol terminals[] = {slash, star, minus, plus,
                       number, id, lpar, rpar, eps,
@@ -55,9 +61,10 @@ struct table_item parseTable[sizeof(nonterminals)/sizeof(*nonterminals)][sizeof(
     {{1, {}},                       {1, {}},                        {1, {}},                {1, {}},                    {1, {}}, {1, {}},                       {1, {}},    {1, {}},                            {1, {}},                            {0, {star}},                            {0, {slash}},                           {1, {}}},               // mult_op
 };//    id,                         number,                         read,                   write,                        :=,       (,                             ),          +,                                  -,                                  *,                                       /,                                      $$
 
+
+
 // get row index into parse table
-int nonTermInd(symbol s)
-{
+int nonTermInd(symbol s) {
     switch (s)
     {
     case program:
@@ -85,8 +92,7 @@ int nonTermInd(symbol s)
     }
 }
 // get column index into parse table
-int tokenInd(token t)
-{
+int tokenInd(token t) {
     switch (t)
     {
     case id:
@@ -118,13 +124,15 @@ int tokenInd(token t)
     }
 }
 
-
+void error() {
+    printf("syntax error\n");
+    exit(1);
+}
 // Parse Stack
 symbol parseStack[128];
 int topOfStack = 0;
 
-int isTerminal(symbol s)
-{
+int isTerminal(symbol s) {
     for(int i = 0; i < (sizeof(terminals)/sizeof(*terminals)); i++)
     {
         if(terminals[i] == s) { return 1; }
@@ -133,27 +141,156 @@ int isTerminal(symbol s)
     return 0;
 }
 
+int match(symbol s) {
+    //printf ("the token here is %s \n",names[input_token]);
+    //input_token = scan();
+    switch(input_token) {  //matching tokens
+        case read:
+            if (s == read) {
+                // clear read from top of stack
+                input_token = scan();
+                printf ("the token is %s \n",names[input_token]);
+                return 1;
+            }
+            break;
+        case write:
+            if (s == write) {
+                // clear read from top of stack
+                input_token = scan();
+                printf ("the token is %s \n",names[input_token]);
+                return 1;
+            }
+            break;
+        case id:
+            if (s == id) {
+                // clear read from top of stack
+                input_token = scan();
+                printf ("the token is %s \n",names[input_token]);
+                return 1;
+            }
+            break;
+        case literal:
+            if (s == literal) {
+                // clear read from top of stack
+                input_token = scan();
+                printf ("the token is %s \n",names[input_token]);
+                return 1;
+            }
+            break;
+        case becomes:
+            if (s == becomes) {
+                // clear read from top of stack
+                input_token = scan();
+                printf ("the token is %s \n",names[input_token]);
+                return 1;
+            }
+            break;
+        case addOp:
+            if (s == addOp) {
+                // clear read from top of stack
+                input_token = scan();
+                printf ("the token is %s \n",names[input_token]);
+                return 1;
+            }
+            break;
+        case subOp:
+            if (s == subOp) {
+                // clear read from top of stack
+                input_token = scan();
+                printf ("the token is %s \n",names[input_token]);
+                return 1;
+            }
+            break;
+        case mulOp:
+            if (s == mulOp) {
+                // clear read from top of stack
+                input_token = scan();
+                printf ("the token is %s \n",names[input_token]);
+                return 1;
+            }
+            break;
+        case divOp:
+            if (s == divOp) {
+                // clear read from top of stack
+                input_token = scan();
+                printf ("the token is %s \n",names[input_token]);
+                return 1;
+            }
+            break;
+        case lparen:
+            if (s == lparen) {
+                // clear read from top of stack
+                input_token = scan();
+                printf ("the token is %s \n",names[input_token]);
+                return 1;
+            }
+            break;
+        case rparen:
+            if (s == rparen) {
+                // clear read from top of stack
+                input_token = scan();
+                printf ("the token is %s \n",names[input_token]);
+                return 1;
+            }
+            break;
+        case eof:
+            if (s == eof) {
+                // clear read from top of stack
+                input_token = scan();
+                printf ("the token is %s \n",names[input_token]);
+                return 0;
+            }
+            break;
+        default:
+            error();
+            printf("syntax error \n");
+            exit(1);
+        }
+}
+
+int predict(int row){
+    int i;
+    int number_of_nonterminals=0;
+    for(i=0; i<12;i++){
+        if (parseTable[row][i].action==0){
+            number_of_nonterminals++;
+            //counts possible production of terminals
+        }
+    }
+    return number_of_nonterminals;
+}
+
+
 int main(int argc, char* argv[])
 {
+
     FILE *src;
+
     char *prog_prefix;
     char file_name[32];
-
-
-    symbol expSymbol;
-    int ntermInd;
-    int tokInd;
-    struct table_item item;
 
     prog_prefix = "./programs/";
 
     strcpy(file_name, prog_prefix);
+    //printf("opening file: %s\n", file_name);
+
+    symbol expSymbol;
+    int r; //match returns
+    int number_of_productions=0; //max 4
+    int number_of_nonterminals; //
+    int number_of_terminals=0;
+    int number_of_symbols=0;
+
+    int ntermInd;
+    int tokInd;
+    struct table_item item;
 
     // program name was passed in as cl arg
     if (argc > 1)
     {
         strcat(file_name, argv[1]);
         printf("opening file: %s\n", file_name);
+
         src = fopen(file_name, "r");
 
         // failed to open file
@@ -170,86 +307,109 @@ int main(int argc, char* argv[])
     // init parse stack
     parseStack[topOfStack] = program;
 
+    //number_of_productions++; //1 item on stack
+    number_of_nonterminals=predict(number_of_productions); //# of paths to match
+    //printf("nonterms: %d\n", number_of_nonterminals);
+    if(number_of_nonterminals>0){
+
+        parseStack[topOfStack] = (symbol)"$$";
+        topOfStack++;
+        //printf("top of stack: %d\n", topOfStack);
+        parseStack[topOfStack] = (symbol)"stmt_list";
+        //printf("parseStack[topOfStack] is: %s\n", parseStack[topOfStack]);
+        number_of_productions=topOfStack;
+    }
+
+    number_of_nonterminals=predict(number_of_productions);
+    //printf("nonterms2: %d\n", number_of_nonterminals);
+    if(number_of_nonterminals>0){
+        topOfStack++;
+        printf("top of stack: %d\n", topOfStack);
+        parseStack[topOfStack] = (symbol)"stmt";
+    }
+
+
+    printf ("token: %s \n", names[input_token]);
+
     do
     {
         expSymbol = parseStack[topOfStack];
-        parseStack[topOfStack] = NULL;
+        //parseStack[topOfStack] = null;//doesnt compile
 
-        if(topOfStack > 0)
+        if(topOfStack > 0) {
             topOfStack--;
 
         // check if top of stack is terminal or non-terminal
-        if (isTerminal(expSymbol))
-        {
-            printf("expected symbol is terminal: %s", expSymbol);
-            // TODO: match expected goes here
-
-
-            if (expSymbol == $$)
+            if (isTerminal(expSymbol))
             {
-                printf("success -- no lexical or syntactical errors");
-                break;
-            }
+                //printf("expected symbol is a terminal: %s", expSymbol);
+                printf ("the expected symbol is a terminal: %s \n", names[input_token]);
+                // TODO: match expected goes here
+                //input_token = scan();
+                //input_token = scan();
+                //expSymbol = (symbol)input_token;
+                r = match(expSymbol);
+                if(r==1){ //match success
 
-        } else
-        {
-            input_token = scan();
-            printf ("the token is %s \n", names[input_token]);
-
-            ntermInd = nonTermInd(expSymbol);
-            tokInd = tokenInd(input_token);
-
-            if (ntermInd != -1 && tokInd != -1)
-            {
-                // check parse table
-                item = parseTable[ntermInd][tokInd];
-
-                if (item.action)
-                {
-                    // match(expSymbol);
-
-
-                } else
-                {
-                    
                 }
-            }
-            else
+                 else {
+                    printf("\nSYNTAX ERROR\n");
+                };
+
+                if (expSymbol == $$)
+                {
+                    printf("success -- no lexical or syntactical errors");
+                    break;
+                }
+                //break;
+            } else
             {
-                printf("index error: symbol-%s, token-%s", expSymbol, input_token);
+                puts("testing else");
+                ntermInd = nonTermInd(expSymbol);
+                tokInd = tokenInd(input_token);
+
+                if (ntermInd != -1 && tokInd != -1)
+                {
+                    // check parse table
+                    item = parseTable[ntermInd][tokInd];
+
+                    printf("Indexing parse table [%s][%s]; result: %s", ntermInd, tokInd, (item.action) ? "error" : "no error");
+
+                    if (item.action)
+                    {
+                        // syntax error found
+                        printf("\nSYNTAX ERROR\n");
+                    } else
+                    {
+                        // push production to stack
+                        for (int i = 3; i >= 0; i--)
+                        {
+                            if (item.production[i] != NULL)
+                            {
+                                parseStack[++topOfStack] = item.production[i];
+                                printf("\tPushing to parse stack: %s\n", item.production[i]);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    printf("index error: symbol-%s, token-%s", expSymbol, input_token);
+                }
+
+
             }
-            
-            
         }
+        printf("\n---------------------\nTOS: %d -- ps[TOS]: %s\n", topOfStack, parseStack[topOfStack] );
+        //input_token = scan();
+        puts("restarting loop\n");
+        input_token = scan();
+        printf("prog end input token: %s\n", names[input_token]);
 
-        
-
-    }while(parseStack[0] != NULL);
+    }while(topOfStack != 0);
 
     if (src != NULL)
         fclose(src);
 
     return(0);
 }
-
-// terminal {+, -, *, /, id, $$, :=, (, ), read, write, number, eps}
-
-// program      −→ stmt_list $$
-// stmt_list    −→ stmt stmt_list | eps
-// stmt         −→ id := expr | read id | write expr
-// expr         −→ term term_tail
-// term_tail    −→ add_op term term_tail | eps
-// term         −→ factor factor_tail
-// factor_tail  −→ mult_op factor factor_tail | eps
-// factor       −→ ( expr ) | id | number
-// add_op       −→ + | -
-// mult_op      −→ * | /
-
-/*
-    {
-        {{},{},{},{},{}},
-        {{},{},{},{},{}},
-        {{},{},{},{},{}},
-        {{},{},{},{},{}}
-    }
-*/

@@ -108,6 +108,7 @@ void stmt() {
             break;
         case write:
             match(write);
+
             expr();
             break;
         default:

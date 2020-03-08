@@ -6,6 +6,7 @@
 int lineNum =1; //counter for line number
 char errorMessage[50] = "improper formatting. check your syntax carefully.";
 
+
 int mStart;
 typedef enum {read, write, id, literal, becomes,
                 addOp, subOp, mulOp, divOp, lparen, rparen, eof} token;
