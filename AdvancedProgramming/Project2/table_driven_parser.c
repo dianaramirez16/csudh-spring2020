@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 typedef enum {read, write, id, literal, becomes,
                 addOp, subOp, mulOp, divOp, lparen, rparen, eof} token;
@@ -141,102 +142,103 @@ int isTerminal(symbol s) {
     return 0;
 }
 
-int match(symbol s) {
+void match(symbol s) {
     //printf ("the token here is %s \n",names[input_token]);
-    //input_token = scan();
+
+    input_token = scan();
     switch(input_token) {  //matching tokens
         case read:
             if (s == read) {
-                // clear read from top of stack
-                input_token = scan();
-                printf ("the token is %s \n",names[input_token]);
-                return 1;
+                token input_token;
+                int n = tokenInd(input_token);
+                printf("n= %d\n",n );
+                if (n==0){
+                    printf ("the token is %s: match found.\n",names[input_token]);
+                    topOfStack--;  //remove read from stack
+                } else {
+                    puts("SYNTAX ERROR. token does not match prediction");
+                }
             }
             break;
         case write:
             if (s == write) {
-                // clear read from top of stack
-                input_token = scan();
-                printf ("the token is %s \n",names[input_token]);
-                return 1;
+                int n = tokenInd(input_token);
+                if (n==0){
+                    printf ("the token is %s: match found.\n",names[input_token]);
+                    topOfStack--;  //remove read from stack
+                } else {
+                    puts("SYNTAX ERROR. token does not match prediction");
+                }
             }
             break;
         case id:
             if (s == id) {
-                // clear read from top of stack
-                input_token = scan();
+
+
                 printf ("the token is %s \n",names[input_token]);
                 return 1;
             }
             break;
         case literal:
             if (s == literal) {
-                // clear read from top of stack
-                input_token = scan();
+
+
                 printf ("the token is %s \n",names[input_token]);
                 return 1;
             }
             break;
         case becomes:
             if (s == becomes) {
-                // clear read from top of stack
-                input_token = scan();
+
                 printf ("the token is %s \n",names[input_token]);
                 return 1;
             }
             break;
         case addOp:
             if (s == addOp) {
-                // clear read from top of stack
-                input_token = scan();
+
                 printf ("the token is %s \n",names[input_token]);
                 return 1;
             }
             break;
         case subOp:
             if (s == subOp) {
-                // clear read from top of stack
-                input_token = scan();
+
                 printf ("the token is %s \n",names[input_token]);
                 return 1;
             }
             break;
         case mulOp:
             if (s == mulOp) {
-                // clear read from top of stack
-                input_token = scan();
+
                 printf ("the token is %s \n",names[input_token]);
                 return 1;
             }
             break;
         case divOp:
             if (s == divOp) {
-                // clear read from top of stack
-                input_token = scan();
+
                 printf ("the token is %s \n",names[input_token]);
                 return 1;
             }
             break;
         case lparen:
             if (s == lparen) {
-                // clear read from top of stack
-                input_token = scan();
+
                 printf ("the token is %s \n",names[input_token]);
                 return 1;
             }
             break;
         case rparen:
             if (s == rparen) {
-                // clear read from top of stack
-                input_token = scan();
+
                 printf ("the token is %s \n",names[input_token]);
                 return 1;
             }
             break;
         case eof:
             if (s == eof) {
-                // clear read from top of stack
-                input_token = scan();
+
                 printf ("the token is %s \n",names[input_token]);
                 return 0;
             }
@@ -275,11 +277,10 @@ int main(int argc, char* argv[])
     //printf("opening file: %s\n", file_name);
 
     symbol expSymbol;
-    int r; //match returns
-    int number_of_productions=0; //max 4
-    int number_of_nonterminals; //
-    int number_of_terminals=0;
-    int number_of_symbols=0;
+    int number_of_productions=0; //row to scan
+    int number_of_nonterminals; //number of paths to parse
+    int number_of_terminals=0; //terminals inside each path
+    int number_of_symbols=0; //symbols on the stack
 
     int ntermInd;
     int tokInd;
@@ -303,38 +304,35 @@ int main(int argc, char* argv[])
         src = NULL;
 
     setSource(src);
-
+    expSymbol = parseStack[topOfStack];
     // init parse stack
     parseStack[topOfStack] = program;
+    bool bx = (expSymbol == NULL);
+    printf(bx ? "bx true\n" : "bx false\n");
 
-    //number_of_productions++; //1 item on stack
     number_of_nonterminals=predict(number_of_productions); //# of paths to match
-    //printf("nonterms: %d\n", number_of_nonterminals);
-    if(number_of_nonterminals>0){
+
+    if(number_of_nonterminals>0 && topOfStack==0){
 
         parseStack[topOfStack] = (symbol)"$$";
         topOfStack++;
-        //printf("top of stack: %d\n", topOfStack);
+
         parseStack[topOfStack] = (symbol)"stmt_list";
-        //printf("parseStack[topOfStack] is: %s\n", parseStack[topOfStack]);
+
         number_of_productions=topOfStack;
     }
+    printf("#productions =topOfStack === %d\n", number_of_productions);
 
     number_of_nonterminals=predict(number_of_productions);
-    //printf("nonterms2: %d\n", number_of_nonterminals);
-    if(number_of_nonterminals>0){
+
+    if(number_of_nonterminals>0 && bx !=false){
         topOfStack++;
-        printf("top of stack: %d\n", topOfStack);
-        parseStack[topOfStack] = (symbol)"stmt";
+        parseStack[topOfStack] = (symbol)stmt;
+        printf("top of stack is stmt index: %d\n", topOfStack);
     }
-
-
-    printf ("token: %s \n", names[input_token]);
-
+    expSymbol = parseStack[topOfStack]; //stmt
     do
     {
-        expSymbol = parseStack[topOfStack];
-        //parseStack[topOfStack] = null;//doesnt compile
 
         if(topOfStack > 0) {
             topOfStack--;
@@ -346,15 +344,10 @@ int main(int argc, char* argv[])
                 printf ("the expected symbol is a terminal: %s \n", names[input_token]);
                 // TODO: match expected goes here
                 //input_token = scan();
-                //input_token = scan();
+                input_token = scan();
                 //expSymbol = (symbol)input_token;
-                r = match(expSymbol);
-                if(r==1){ //match success
+                match(expSymbol);
 
-                }
-                 else {
-                    printf("\nSYNTAX ERROR\n");
-                };
 
                 if (expSymbol == $$)
                 {
@@ -365,8 +358,11 @@ int main(int argc, char* argv[])
             } else
             {
                 puts("testing else");
-                ntermInd = nonTermInd(expSymbol);
-                tokInd = tokenInd(input_token);
+                ntermInd = nonTermInd(expSymbol); //item on the stack
+                tokInd = tokenInd(input_token); // should be read column 2
+
+                printf("expsymbol row: %d\n", ntermInd);
+                printf("tokind column: %d\n", tokInd );
 
                 if (ntermInd != -1 && tokInd != -1)
                 {
@@ -404,9 +400,10 @@ int main(int argc, char* argv[])
         //input_token = scan();
         puts("restarting loop\n");
         input_token = scan();
+        //input_token = scan();
         printf("prog end input token: %s\n", names[input_token]);
 
-    }while(topOfStack != 0);
+    }while(topOfStack > 0);
 
     if (src != NULL)
         fclose(src);
