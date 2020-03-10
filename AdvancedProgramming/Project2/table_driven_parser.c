@@ -24,23 +24,24 @@ FILE *src;
  ****************************************************************************/
 
 // all symbols in language
-typedef enum {program, stmt_list, stmt, expr, term_tail, term,
+typedef enum {NONE, program, stmt_list, stmt, expr, term_tail, term,
                 factor, factor_tail, mult_op, add_op,
-                $$, eps, /*id, becomes, read, write,*/ plus,
+                $$, eps, identifier, assignment, input, output, plus,
                 minus, star, slash, lpar, rpar, number} symbol;
-char *sym_names[] = { "program", "stmt_list", "stmt", "expr",
+char *sym_names[] = { "Null", "program", "stmt_list", "stmt", "expr",
                       "term_tail", "term", "factor", "factor_tail",
                       "mult_op", "add_op", "$$", "epsilon", "id",
                       ":=", "read", "write", "+", "-", "*", "/",
                       "(", ")", "number"};
 // symbols that are terminals
 symbol terminals[] = {slash, star, minus, plus,
-                      number, id, lpar, rpar, eps,
-                      becomes, read, write, $$};
+                      number, identifier, lpar, rpar, eps,
+                      assignment, input, output, $$};
 // symbols that are nonterminals
 symbol nonterminals[] = {program, stmt_list, stmt,
                          expr, term_tail, term, factor,
                          factor_tail, add_op, mult_op};
+
 
 // stores action: {predict:0 or error:1}; production: {[symbol1, symbol2, ... , symbol5], [], [], []}
 struct table_item
@@ -143,28 +144,30 @@ int isTerminal(symbol s) {
 }
 
 void match(symbol s) {
-    //printf ("the token here is %s \n",names[input_token]);
+    printf ("the token here is %s \n",names[input_token]);
 
-    input_token = scan();
+    //input_token = scan();
+    printf("testing s ------ %d",nonTermInd(s));
     switch(input_token) {  //matching tokens
         case read:
             if (s == read) {
                 token input_token;
                 int n = tokenInd(input_token);
-                printf("n= %d\n",n );
+                //printf("n= %d\n",n );
                 if (n==0){
-                    printf ("the token is %s: match found.\n",names[input_token]);
+                    printf ("the following token is: %s - match found.\n",names[input_token]);
                     topOfStack--;  //remove read from stack
                 } else {
-                    puts("SYNTAX ERROR. token does not match prediction");
+                    //puts("SYNTAX ERROR. token does not match prediction");
                 }
             }
             break;
         case write:
             if (s == write) {
-                int n = tokenInd(input_token);
-                if (n==0){
-                    printf ("the token is %s: match found.\n",names[input_token]);
+                int n = nonTermInd(input_token);
+                  printf ("input_token follows write: %s\n",names[input_token]);
+                if (n==3){
+                    printf ("the following token is nonterminal: expr - match found.\n");
                     topOfStack--;  //remove read from stack
                 } else {
                     puts("SYNTAX ERROR. token does not match prediction");
@@ -176,7 +179,7 @@ void match(symbol s) {
 
 
                 printf ("the token is %s \n",names[input_token]);
-                return 1;
+
             }
             break;
         case literal:
@@ -191,56 +194,56 @@ void match(symbol s) {
             if (s == becomes) {
 
                 printf ("the token is %s \n",names[input_token]);
-                return 1;
+
             }
             break;
         case addOp:
             if (s == addOp) {
 
                 printf ("the token is %s \n",names[input_token]);
-                return 1;
+
             }
             break;
         case subOp:
             if (s == subOp) {
 
                 printf ("the token is %s \n",names[input_token]);
-                return 1;
+
             }
             break;
         case mulOp:
             if (s == mulOp) {
 
                 printf ("the token is %s \n",names[input_token]);
-                return 1;
+
             }
             break;
         case divOp:
             if (s == divOp) {
 
                 printf ("the token is %s \n",names[input_token]);
-                return 1;
+
             }
             break;
         case lparen:
             if (s == lparen) {
 
                 printf ("the token is %s \n",names[input_token]);
-                return 1;
+
             }
             break;
         case rparen:
             if (s == rparen) {
 
                 printf ("the token is %s \n",names[input_token]);
-                return 1;
+
             }
             break;
         case eof:
             if (s == eof) {
 
                 printf ("the token is %s \n",names[input_token]);
-                return 0;
+
             }
             break;
         default:
@@ -304,10 +307,10 @@ int main(int argc, char* argv[])
         src = NULL;
 
     setSource(src);
-    expSymbol = parseStack[topOfStack];
+    //expSymbol = parseStack[topOfStack];
     // init parse stack
     parseStack[topOfStack] = program;
-    bool bx = (expSymbol == NULL);
+    /*bool bx = (expSymbol == NULL);
     printf(bx ? "bx true\n" : "bx false\n");
 
     number_of_nonterminals=predict(number_of_productions); //# of paths to match
@@ -320,31 +323,32 @@ int main(int argc, char* argv[])
         parseStack[topOfStack] = (symbol)"stmt_list";
 
         number_of_productions=topOfStack;
-    }
-    printf("#productions =topOfStack === %d\n", number_of_productions);
-
+    }*/
+    //printf("#productions =topOfStack === %d\n", number_of_productions);
+    /*
     number_of_nonterminals=predict(number_of_productions);
 
     if(number_of_nonterminals>0 && bx !=false){
         topOfStack++;
         parseStack[topOfStack] = (symbol)stmt;
         printf("top of stack is stmt index: %d\n", topOfStack);
-    }
-    expSymbol = parseStack[topOfStack]; //stmt
+    }*/
+    expSymbol = parseStack[topOfStack];
+      printf("expected symbol: %s\n", sym_names[expSymbol]);
     do
     {
 
         if(topOfStack > 0) {
-            topOfStack--;
+          topOfStack--;
 
         // check if top of stack is terminal or non-terminal
             if (isTerminal(expSymbol))
             {
-                //printf("expected symbol is a terminal: %s", expSymbol);
+
                 printf ("the expected symbol is a terminal: %s \n", names[input_token]);
                 // TODO: match expected goes here
                 //input_token = scan();
-                input_token = scan();
+                //input_token = scan();
                 //expSymbol = (symbol)input_token;
                 match(expSymbol);
 
@@ -396,10 +400,10 @@ int main(int argc, char* argv[])
 
             }
         }
-        printf("\n---------------------\nTOS: %d -- ps[TOS]: %s\n", topOfStack, parseStack[topOfStack] );
+      //  printf("\n---------------------\nTOS: %d -- ps[TOS]: %s\n", topOfStack, parseStack[topOfStack] );
         //input_token = scan();
         puts("restarting loop\n");
-        input_token = scan();
+        //input_token = scan();
         //input_token = scan();
         printf("prog end input token: %s\n", names[input_token]);
 
