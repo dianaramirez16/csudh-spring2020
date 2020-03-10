@@ -178,7 +178,7 @@ void match(symbol s) {
             if (s == id) {
 
 
-                printf ("the token is %s \n",names[input_token]);
+              //  printf ("the token is %s \n",names[input_token]);
 
             }
             break;
@@ -280,11 +280,7 @@ int main(int argc, char* argv[])
     //printf("opening file: %s\n", file_name);
 
     symbol expSymbol;
-    int number_of_productions=0; //row to scan
-    int number_of_nonterminals; //number of paths to parse
-    int number_of_terminals=0; //terminals inside each path
-    int number_of_symbols=0; //symbols on the stack
-
+    
     int ntermInd;
     int tokInd;
     struct table_item item;
@@ -307,32 +303,9 @@ int main(int argc, char* argv[])
         src = NULL;
 
     setSource(src);
-    //expSymbol = parseStack[topOfStack];
-    // init parse stack
+
     parseStack[topOfStack] = program;
-    /*bool bx = (expSymbol == NULL);
-    printf(bx ? "bx true\n" : "bx false\n");
 
-    number_of_nonterminals=predict(number_of_productions); //# of paths to match
-
-    if(number_of_nonterminals>0 && topOfStack==0){
-
-        parseStack[topOfStack] = (symbol)"$$";
-        topOfStack++;
-
-        parseStack[topOfStack] = (symbol)"stmt_list";
-
-        number_of_productions=topOfStack;
-    }*/
-    //printf("#productions =topOfStack === %d\n", number_of_productions);
-    /*
-    number_of_nonterminals=predict(number_of_productions);
-
-    if(number_of_nonterminals>0 && bx !=false){
-        topOfStack++;
-        parseStack[topOfStack] = (symbol)stmt;
-        printf("top of stack is stmt index: %d\n", topOfStack);
-    }*/
     expSymbol = parseStack[topOfStack];
       printf("expected symbol: %s\n", sym_names[expSymbol]);
     do
@@ -346,10 +319,7 @@ int main(int argc, char* argv[])
             {
 
                 printf ("the expected symbol is a terminal: %s \n", names[input_token]);
-                // TODO: match expected goes here
-                //input_token = scan();
-                //input_token = scan();
-                //expSymbol = (symbol)input_token;
+
                 match(expSymbol);
 
 
@@ -375,7 +345,7 @@ int main(int argc, char* argv[])
 
                     printf("Indexing parse table [%s][%s]; result: %s", ntermInd, tokInd, (item.action) ? "error" : "no error");
 
-                    if (item.action)
+                    if (item.action==1)
                     {
                         // syntax error found
                         printf("\nSYNTAX ERROR\n");
@@ -400,11 +370,9 @@ int main(int argc, char* argv[])
 
             }
         }
-      //  printf("\n---------------------\nTOS: %d -- ps[TOS]: %s\n", topOfStack, parseStack[topOfStack] );
-        //input_token = scan();
+
         puts("restarting loop\n");
-        //input_token = scan();
-        //input_token = scan();
+
         printf("prog end input token: %s\n", names[input_token]);
 
     }while(topOfStack > 0);
