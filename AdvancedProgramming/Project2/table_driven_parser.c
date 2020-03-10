@@ -145,121 +145,126 @@ int isTerminal(symbol s) {
 void match(symbol s) {
     //input_token=scan();
     //input_token = scan();
-
+    char str1[] = "read";
+    printf("symbol-%s, token-%s\n", sym_names[s], names[input_token]);
     printf("symbol-%d, token-%d\n", s, input_token);
-    //printf("value of symbol-%d, value of token-%d", s.value, input_token.value);
-    if(s==15){
-          printf ("the token is: %s - match found.\n",names[input_token]);
-          topOfStack--;  //remove read from stack
-          input_token =scan();
-      } else {
-          puts("SYNTAX ERROR. token does not match prediction");
-      }
-    }
-/*
+    printf("\tTOS: %s\n", sym_names[parseStack[topOfStack]]);
     switch(input_token) {  //matching tokens
         case read:
-            if (s == read) {
-              puts("string is read ^^^^^^^^^^");
-              if((strcmp(points_to_token, points_to_symbolStack))==0){
-                    printf ("the token is: %s - match found.\n",names[input_token]);
-                    topOfStack--;  //remove read from stack
-                    input_token =scan();
-                } else {
-                    puts("SYNTAX ERROR. token does not match prediction");
-                }
-            }
+            if((strcmp(sym_names[s], "read")==0)){
+                  printf ("the token is: %s - match found.\n",names[input_token]);
+                  topOfStack--;  //remove read from stack
+                  input_token =scan();
+              } else {
+                  puts("--SYNTAX ERROR. token does not match prediction");
+              }
             break;
         case write:
-            if (s == write) {
-                int n = nonTermInd(input_token);
-                  printf ("input_token follows write: %s\n",names[input_token]);
-                if (n==3){
-                    printf ("the following token is nonterminal: expr - match found.\n");
-                    topOfStack--;  //remove read from stack
-
-                } else {
-                    puts("SYNTAX ERROR. token does not match prediction");
-                }
-            }
+            if((strcmp(sym_names[s], "write")==0)){
+                  printf ("the token is: %s - match found.\n",names[input_token]);
+                  topOfStack--;  //remove read from stack
+                  input_token =scan();
+              } else {
+                  puts("SYNTAX ERROR. token does not match prediction");
+              }
             break;
         case id:
-            if (s == id) {
-
-
-              //  printf ("the token is %s \n",names[input_token]);
-
-            }
+            if((strcmp(sym_names[s], "id")==0)){
+                  printf ("the token is: %s - match found.\n",names[input_token]);
+                  topOfStack--;  //remove read from stack
+                  input_token =scan();
+              } else {
+                  printf("s = %s\n\n", sym_names[s]);
+                  puts("SYNTAX ERROR. token does not match prediction");
+              }
             break;
         case literal:
-            if (s == literal) {
-
-
-                printf ("the token is %s \n",names[input_token]);
-                return 1;
-            }
+            if((strcmp(sym_names[s], "number")==0)){
+                  printf ("the token is: %s - match found.\n",names[input_token]);
+                  topOfStack--;  //remove read from stack
+                  input_token =scan();
+              } else {
+                  puts("SYNTAX ERROR. token does not match prediction");
+              }
             break;
         case becomes:
-            if (s == becomes) {
-
-                printf ("the token is %s \n",names[input_token]);
-
-            }
+            if((strcmp(sym_names[s], ":=")==0)){
+                  printf ("the token is: %s - match found.\n",names[input_token]);
+                  topOfStack--;  //remove read from stack
+                  input_token =scan();
+              } else {
+                  puts("SYNTAX ERROR. token does not match prediction");
+              }
             break;
         case addOp:
-            if (s == addOp) {
-
-                printf ("the token is %s \n",names[input_token]);
-
-            }
+            if((strcmp(sym_names[s], "+")==0)){
+                  printf ("the token is: %s - match found.\n",names[input_token]);
+                  topOfStack--;  //remove read from stack
+                  input_token =scan();
+              } else {
+                  puts("SYNTAX ERROR. token does not match prediction");
+              }
             break;
         case subOp:
-            if (s == subOp) {
-
-                printf ("the token is %s \n",names[input_token]);
-
-            }
+            if((strcmp(sym_names[s], "-")==0)){
+                  printf ("the token is: %s - match found.\n",names[input_token]);
+                  topOfStack--;  //remove read from stack
+                  input_token =scan();
+              } else {
+                  puts("SYNTAX ERROR. token does not match prediction");
+              }
             break;
         case mulOp:
-            if (s == mulOp) {
-
-                printf ("the token is %s \n",names[input_token]);
-
-            }
+            if((strcmp(sym_names[s], "*")==0)){
+                  printf ("the token is: %s - match found.\n",names[input_token]);
+                  topOfStack--;  //remove read from stack
+                  input_token =scan();
+              } else {
+                  puts("SYNTAX ERROR. token does not match prediction");
+              }
             break;
         case divOp:
-            if (s == divOp) {
-
-                printf ("the token is %s \n",names[input_token]);
-
-            }
+            if((strcmp(sym_names[s], "/")==0)){
+                  printf ("the token is: %s - match found.\n",names[input_token]);
+                  topOfStack--;  //remove read from stack
+                  input_token =scan();
+              } else {
+                  puts("SYNTAX ERROR. token does not match prediction");
+              }
             break;
         case lparen:
-            if (s == lparen) {
-
-                printf ("the token is %s \n",names[input_token]);
-
-            }
+            if((strcmp(sym_names[s], "(")==0)){
+                  printf ("the token is: %s - match found.\n",names[input_token]);
+                  topOfStack--;  //remove read from stack
+                  input_token =scan();
+              } else {
+                  puts("SYNTAX ERROR. token does not match prediction");
+              }
             break;
         case rparen:
-            if (s == rparen) {
-
-                printf ("the token is %s \n",names[input_token]);
-
-            }
+            if((strcmp(sym_names[s], ")")==0)){
+                  printf ("the token is: %s - match found.\n",names[input_token]);
+                  topOfStack--;  //remove read from stack
+                  input_token =scan();
+              } else {
+                  puts("SYNTAX ERROR. token does not match prediction");
+              }
             break;
         case eof:
-            if (s == eof) {
-
-                printf ("the token is %s \n",names[input_token]);
-
-            }
+            if((strcmp(sym_names[s], "epsilon")==0)){
+                  printf ("the token is: %s - match found.\n",names[input_token]);
+                  topOfStack--;  //remove read from stack
+                  input_token =scan();
+              } else {
+                  puts("SYNTAX ERROR. token does not match prediction");
+              }
             break;
         default:
             error();
             printf("syntax error \n");
             exit(1);
-          }*/
+        }
+    }
 
 int main(int argc, char* argv[])
 {
@@ -309,10 +314,10 @@ int main(int argc, char* argv[])
         if (isTerminal(expSymbol))
         {
             printf("\texpected symbol is terminal: %s\n", sym_names[expSymbol]);
-            //input_token =scan();
+            input_token =scan();
             match(expSymbol);
             expSymbol = parseStack[topOfStack];
-            puts("reaching?");
+
             if (expSymbol == $$)
             {
                 printf("success -- no lexical or syntactical errors");
@@ -363,8 +368,6 @@ int main(int argc, char* argv[])
             {
                 printf("index error: symbol-%s, token-%s", expSymbol, input_token);
             }
-
-
         }
 
     }while(topOfStack >0);
