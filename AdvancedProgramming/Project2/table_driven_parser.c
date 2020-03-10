@@ -24,11 +24,11 @@ FILE *src;
  ****************************************************************************/
 
 // all symbols in language
-typedef enum {program, stmt_list, stmt, expr, term_tail, term,
+typedef enum {NONE, program, stmt_list, stmt, expr, term_tail, term,
                 factor, factor_tail, mult_op, add_op,
                 $$, eps, identifier, assignment, input, output, plus,
                 minus, star, slash, lpar, rpar, number} symbol;
-char *sym_names[] = {"program", "stmt_list", "stmt", "expr",
+char *sym_names[] = { "Null", "program", "stmt_list", "stmt", "expr",
                       "term_tail", "term", "factor", "factor_tail",
                       "mult_op", "add_op", "$$", "epsilon", "id",
                       ":=", "read", "write", "+", "-", "*", "/",
@@ -145,20 +145,20 @@ int isTerminal(symbol s) {
 
 void match(symbol s) {
     printf ("the token here is %s \n",names[input_token]);
-
     //input_token = scan();
-    printf("testing s ------ %d",nonTermInd(s));
-    switch(input_token) {  //matching tokens
+    printf("testing s ------ %s",sym_names[s]);
+    char *points_to_token, *points_to_symbolStack;
+    points_to_token = names[input_token];
+    points_to_symbolStack = sym_names[s];
+    switch(s) {  //matching tokens
         case read:
             if (s == read) {
-                token input_token;
-                int n = tokenInd(input_token);
-                //printf("n= %d\n",n );
-                if (n==0){
-                    printf ("the following token is: %s - match found.\n",names[input_token]);
+              if(points_to_symbolStack == points_to_symbolStack){
+                    printf ("the token is: %s - match found.\n",names[input_token]);
                     topOfStack--;  //remove read from stack
+                    input_token =scan();
                 } else {
-                    //puts("SYNTAX ERROR. token does not match prediction");
+                    puts("SYNTAX ERROR. token does not match prediction");
                 }
             }
             break;
@@ -169,6 +169,7 @@ void match(symbol s) {
                 if (n==3){
                     printf ("the following token is nonterminal: expr - match found.\n");
                     topOfStack--;  //remove read from stack
+
                 } else {
                     puts("SYNTAX ERROR. token does not match prediction");
                 }
@@ -187,7 +188,7 @@ void match(symbol s) {
 
 
                 printf ("the token is %s \n",names[input_token]);
-
+                return 1;
             }
             break;
         case becomes:
@@ -268,22 +269,19 @@ int predict(int row){
 
 int main(int argc, char* argv[])
 {
-
     FILE *src;
-
     char *prog_prefix;
     char file_name[32];
+
+
+    symbol expSymbol;
+    int ntermInd;
+    int tokInd;
+    struct table_item item;
 
     prog_prefix = "./programs/";
 
     strcpy(file_name, prog_prefix);
-    //printf("opening file: %s\n", file_name);
-
-    symbol expSymbol;
-
-    int ntermInd;
-    int tokInd;
-    struct table_item item;
 
     // program name was passed in as cl arg
     if (argc > 1)
@@ -303,71 +301,79 @@ int main(int argc, char* argv[])
 
     setSource(src);
 
+    // init parse stack
     parseStack[topOfStack] = program;
     input_token = scan();
 
-    expSymbol = parseStack[topOfStack];
-      printf("expected symbol: %s\n", sym_names[expSymbol]);
     do
     {
         expSymbol = parseStack[topOfStack];
-        printf("\ncurrent expected symbol: %s\n", sym_names[expSymbol]);
-        printf("current input token: %s\n\n", names[input_token]);
+        //printf("\ncurrent expected symbol: %s\n", sym_names[expSymbol]);
+        //printf("current input token: %s\n\n", names[input_token]);
 
         // check if top of stack is terminal or non-terminal
         if (isTerminal(expSymbol))
         {
-            // printf("expected symbol is terminal: %s", sym_names[expSymbol]);
-
+            printf("\texpected symbol is terminal: %s\n", sym_names[expSymbol]);
+            //input_token =scan();
             match(expSymbol);
-
+            expSymbol = parseStack[topOfStack];
+            puts("reaching?");
             if (expSymbol == $$)
             {
                 printf("success -- no lexical or syntactical errors");
                 break;
-            } else
+            }
+
+        } else
+        {
+            printf("expected symbol is not a terminal: %s\n", sym_names[expSymbol]);
+
+            ntermInd = nonTermInd(expSymbol);
+            tokInd = tokenInd(input_token);
+
+            printf("parse table indexes\t symbol: [%d], token: [%d]\n", ntermInd, tokInd);
+
+            if (ntermInd >= 0 && tokInd >= 0)
             {
-                // printf("expected symbol is not a terminal: %s\n", sym_names[expSymbol]);
-                ntermInd = nonTermInd(expSymbol);
-                tokInd = tokenInd(input_token);
-                // printf("parse table indexes\t symbol: [%d], token: [%d]\n", ntermInd, tokInd);
+                // check parse table
+                item = parseTable[ntermInd][tokInd];
 
-                if (ntermInd >= 0 && tokInd >= 0)
+                if (item.action == 1)
                 {
-                    // check parse table
-                    item = parseTable[ntermInd][tokInd];
-
-                    if (item.action == 1)
+                    // syntax error found
+                    printf("\nSYNTAX ERROR - incompatible (%s - %s)\n", sym_names[expSymbol], names[input_token]);
+                } else
+                {
+                    // push production to stack
+                    for (int i = 3; i >= 0; i--)
                     {
-                        // syntax error found
-                        printf("\nSYNTAX ERROR - incompatible (%s - %s)\n", sym_names[expSymbol], names[input_token]);
-                    } else
-                    {
-                        // push production to stack
-                        for (int i = 3; i >= 0; i--)
+                        if (item.production[i] != NULL)
                         {
-                            if (item.production[i] != NULL)
-                            {
-                                printf("\tPushing to parse stack: %s\n", sym_names[item.production[i]]);
-                                parseStack[topOfStack] = item.production[i];
-                                if (i != 0)
-                                    topOfStack++;
-                            }
+                            printf("\tPushing to parse stack: %s\n", sym_names[item.production[i]]);
+                            parseStack[topOfStack] = item.production[i];
+                            if (i != 0)
+                                topOfStack++;
                         }
                     }
-
-                    printf("parse stack: \n");
-                    for (int i = topOfStack; i >= 0; i--)
-                    {
-                        printf("\t(%d): %s\n", i, sym_names[parseStack[i]]);
-                    }
-                    printf("\n\n");
-                } else {
-                  printf("index error: symbol-%s, token-%s", expSymbol, input_token);
                 }
+
+                printf("parse stack: \n");
+                for (int i = topOfStack; i >= 0; i--)
+                {
+                    printf("\t(%d): %s\n", i, sym_names[parseStack[i]]);
+                }
+                printf("\n\n");
             }
+            else
+            {
+                printf("index error: symbol-%s, token-%s", expSymbol, input_token);
+            }
+
+
         }
-    }while(topOfStack > 0);
+
+    }while(topOfStack >0);
 
     if (src != NULL)
         fclose(src);
