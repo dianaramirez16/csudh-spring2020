@@ -1,5 +1,6 @@
 /*
 * Table-Driven Parser for 'Calculator' language
+* writte by Angel Salcido and Diana Ramirez for CSC 521 Spring 2020 - Project 2
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -143,9 +144,7 @@ int isTerminal(symbol s) {
 }
 
 void match(symbol s) {
-    //input_token=scan();
-    //input_token = scan();
-    char str1[] = "read";
+
     printf("symbol-%s, token-%s\n", sym_names[s], names[input_token]);
     printf("symbol-%d, token-%d\n", s, input_token);
     printf("\tTOS: %s\n", sym_names[parseStack[topOfStack]]);
@@ -179,12 +178,12 @@ void match(symbol s) {
               }
             break;
         case literal:
-            if((strcmp(sym_names[s], "number")==0)){
+            if(strcmp(sym_names[s], "number")){
                   printf ("the token is: %s - match found.\n",names[input_token]);
                   topOfStack--;  //remove read from stack
                   input_token =scan();
               } else {
-                  puts("SYNTAX ERROR. token does not match prediction");
+                  puts("case#SYNTAX ERROR. token does not match prediction");
               }
             break;
         case becomes:
@@ -197,7 +196,7 @@ void match(symbol s) {
               }
             break;
         case addOp:
-            if((strcmp(sym_names[s], "+")==0)){
+            if((strcmp(sym_names[s], "add")==0)){
                   printf ("the token is: %s - match found.\n",names[input_token]);
                   topOfStack--;  //remove read from stack
                   input_token =scan();
@@ -206,7 +205,7 @@ void match(symbol s) {
               }
             break;
         case subOp:
-            if((strcmp(sym_names[s], "-")==0)){
+            if((strcmp(sym_names[s], "sub")==0)){
                   printf ("the token is: %s - match found.\n",names[input_token]);
                   topOfStack--;  //remove read from stack
                   input_token =scan();
@@ -215,7 +214,7 @@ void match(symbol s) {
               }
             break;
         case mulOp:
-            if((strcmp(sym_names[s], "*")==0)){
+            if((strcmp(sym_names[s], "mul")==0)){
                   printf ("the token is: %s - match found.\n",names[input_token]);
                   topOfStack--;  //remove read from stack
                   input_token =scan();
@@ -224,7 +223,7 @@ void match(symbol s) {
               }
             break;
         case divOp:
-            if((strcmp(sym_names[s], "/")==0)){
+            if((strcmp(sym_names[s], "div")==0)){
                   printf ("the token is: %s - match found.\n",names[input_token]);
                   topOfStack--;  //remove read from stack
                   input_token =scan();
@@ -252,11 +251,21 @@ void match(symbol s) {
             break;
         case eof:
             if((strcmp(sym_names[s], "epsilon")==0)){
+                  puts("testing ------------------- epsilon");
                   printf ("the token is: %s - match found.\n",names[input_token]);
                   topOfStack--;  //remove read from stack
                   input_token =scan();
-              } else {
+
+              } else if ((strcmp(sym_names[s], "number")==0)) {
+                  puts("testing ------------------- number");
+                  printf ("the token is: %s - match found.\n",names[input_token]);
+                  topOfStack--;  //remove read from stack
+                  input_token =scan();
+
+              }else {
                   puts("SYNTAX ERROR. token does not match prediction");
+                  //input_token =scan();
+
               }
             break;
         default:
