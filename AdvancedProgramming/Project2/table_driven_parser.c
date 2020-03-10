@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
 
 typedef enum {read, write, id, literal, becomes,
                 addOp, subOp, mulOp, divOp, lparen, rparen, eof} token;
@@ -24,14 +23,15 @@ FILE *src;
  ****************************************************************************/
 
 // all symbols in language
-typedef enum {NONE, program, stmt_list, stmt, expr, term_tail, term,
-                factor, factor_tail, mult_op, add_op,
-                $$, eps, identifier, assignment, input, output, plus,
-                minus, star, slash, lpar, rpar, number} symbol;
-char *sym_names[] = { "Null", "program", "stmt_list", "stmt", "expr",
-                      "term_tail", "term", "factor", "factor_tail",
-                      "mult_op", "add_op", "$$", "epsilon", "id",
-                      ":=", "read", "write", "+", "-", "*", "/",
+typedef enum {program, stmt_list, stmt, expr, term_tail,
+                term, factor, factor_tail, mult_op, add_op,
+                $$, eps, identifier, assignment, input,
+                output, plus, minus, star, slash,
+                lpar, rpar, number} symbol;
+char *sym_names[] = { "program", "stmt_list", "stmt", "expr", "term_tail",
+                      "term", "factor", "factor_tail", "mult_op", "add_op",
+                      "$$", "epsilon", "id", ":=", "read",
+                      "write", "+", "-", "*", "/",
                       "(", ")", "number"};
 // symbols that are terminals
 symbol terminals[] = {slash, star, minus, plus,
@@ -62,7 +62,6 @@ struct table_item parseTable[sizeof(nonterminals)/sizeof(*nonterminals)][sizeof(
     {{1, {}},                               {1, {}},                        {1, {}},                    {1, {}},                    {1, {}}, {1, {}},                       {1, {}},    {0, {plus}},                        {0, {minus}},                       {1, {}},                                {1, {}},                                {1, {}}},               // add_op
     {{1, {}},                               {1, {}},                        {1, {}},                    {1, {}},                    {1, {}}, {1, {}},                       {1, {}},    {1, {}},                            {1, {}},                            {0, {star}},                            {0, {slash}},                           {1, {}}},               // mult_op
 };//    id,                                 literal,                         read,                       write,                        :=,       (,                             ),          +,                                  -,                                  *,                                       /,                                      $$
-
 
 
 // get row index into parse table
@@ -144,16 +143,25 @@ int isTerminal(symbol s) {
 }
 
 void match(symbol s) {
-    printf ("the token here is %s \n",names[input_token]);
+    //input_token=scan();
     //input_token = scan();
-    printf("testing s ------ %s",sym_names[s]);
-    char *points_to_token, *points_to_symbolStack;
-    points_to_token = names[input_token];
-    points_to_symbolStack = sym_names[s];
-    switch(s) {  //matching tokens
+
+    printf("symbol-%d, token-%d\n", s, input_token);
+    //printf("value of symbol-%d, value of token-%d", s.value, input_token.value);
+    if(s==15){
+          printf ("the token is: %s - match found.\n",names[input_token]);
+          topOfStack--;  //remove read from stack
+          input_token =scan();
+      } else {
+          puts("SYNTAX ERROR. token does not match prediction");
+      }
+    }
+/*
+    switch(input_token) {  //matching tokens
         case read:
             if (s == read) {
-              if(points_to_symbolStack == points_to_symbolStack){
+              puts("string is read ^^^^^^^^^^");
+              if((strcmp(points_to_token, points_to_symbolStack))==0){
                     printf ("the token is: %s - match found.\n",names[input_token]);
                     topOfStack--;  //remove read from stack
                     input_token =scan();
@@ -251,21 +259,7 @@ void match(symbol s) {
             error();
             printf("syntax error \n");
             exit(1);
-        }
-}
-
-int predict(int row){
-    int i;
-    int number_of_nonterminals=0;
-    for(i=0; i<12;i++){
-        if (parseTable[row][i].action==0){
-            number_of_nonterminals++;
-            //counts possible production of terminals
-        }
-    }
-    return number_of_nonterminals;
-}
-
+          }*/
 
 int main(int argc, char* argv[])
 {
@@ -303,7 +297,7 @@ int main(int argc, char* argv[])
 
     // init parse stack
     parseStack[topOfStack] = program;
-    input_token = scan();
+    //input_token = scan();
 
     do
     {
